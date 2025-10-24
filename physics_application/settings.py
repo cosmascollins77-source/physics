@@ -156,6 +156,9 @@ if ON_RENDER:
     # Render-specific settings
     ALLOWED_HOSTS = ['physics-hhqr.onrender.com', '*']  # Include your specific domain
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    # Ensure DEBUG is False in production
+    DEBUG = False
 else:
     # Local development settings
     ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']

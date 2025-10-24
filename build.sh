@@ -5,17 +5,24 @@ set -o errexit
 # Check if we're running on Render
 if [[ "${RENDER}" == "true" ]]; then
   echo "Running on Render - executing build steps"
+  
   # Install dependencies
+  echo "Installing dependencies..."
   pip install -r requirements.txt
-
+  
   # Collect static files
-  python manage.py collectstatic --no-input
-
+  echo "Collecting static files..."
+  python manage.py collectstatic --no-input -c
+  
   # Run database migrations
-  python manage.py migrate
-
+  echo "Running database migrations..."
+  python manage.py migrate --no-input
+  
   # Populate sample data
+  echo "Populating sample data..."
   python manage.py populate_data
+  
+  echo "Build completed successfully!"
 else
   echo "Running locally - skipping build steps"
   # For local development, we don't need to run these commands
