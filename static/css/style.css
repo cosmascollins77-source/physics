@@ -55,6 +55,19 @@ body {
   color: white !important;
 }
 
+/* Group 5 badge styling */
+.group-badge {
+  background-color: #ffc107;
+  color: #000;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin-left: 1rem;
+  animation: pulse 2s infinite;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 /* Mobile navbar toggle */
 .navbar-toggler {
   border: none;
@@ -244,6 +257,12 @@ footer {
   .nav-link i {
     font-size: 1.1rem;
   }
+  
+  .group-badge {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    margin-left: 0.5rem;
+  }
 }
 
 /* Animation Classes */
@@ -255,7 +274,7 @@ footer {
 
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
 

@@ -136,6 +136,17 @@
             color: white !important;
         }
         
+        /* Group 5 badge styling */
+        .group-badge {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
         /* Mobile navbar toggle */
         .navbar-toggler {
             border: none;
@@ -148,6 +159,13 @@
         
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        /* Animation Classes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -165,7 +183,7 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'topics:home' %}">
                             <i class="fas fa-home"></i> Home
@@ -188,7 +206,10 @@
                     </li>
                 </ul>
                 
-                <!-- Remove authentication links since they're not needed -->
+                <!-- Group 5 badge on the right -->
+                <div class="d-flex align-items-center">
+                    <span class="group-badge">Group 5</span>
+                </div>
             </div>
         </div>
     </nav>

@@ -26,7 +26,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-o5zfx5vac(^^!=#k_*v4_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+# Update ALLOWED_HOSTS to include your Render domain
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,physics-hhqr.onrender.com').split(',')
 
 
 # Application definition
@@ -47,7 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Re-enable Whitenoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -153,7 +154,7 @@ ON_RENDER = 'RENDER' in os.environ
 # Adjust settings based on environment
 if ON_RENDER:
     # Render-specific settings
-    ALLOWED_HOSTS = ['*']  # Render handles host validation
+    ALLOWED_HOSTS = ['physics-hhqr.onrender.com', '*']  # Include your specific domain
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
     # Local development settings
