@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o5zfx5vac(^^!=#k_*v4_^m@pdg8*aj$(r--d@@1m2zd&a)d^8'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-o5zfx5vac(^^!=#k_*v4_^m@pdg8*aj$(r--d@@1m2zd&a)d^8')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
 
 # Application definition
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -140,4 +142,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login/Logout URLs
 # LOGIN_URL = '/users/login/'
 # LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/
+# LOGOUT_REDIRECT_URL = '/'
+
+# WhiteNoise configuration for serving static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Determine if we're running on Render
+ON_RENDER = 'RENDER' in os.environ
+
+# Adjust settings based on environment
+if ON_RENDER:
+    # Render-specific settings
+    ALLOWED_HOSTS = ['*']  # Render handles host validation
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    # Local development settings
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']

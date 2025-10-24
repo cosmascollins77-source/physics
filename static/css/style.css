@@ -1,0 +1,331 @@
+/* Custom Styles for Physics Learning Platform */
+
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --info-color: #0dcaf0;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fb;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Enhanced Navigation */
+.navbar {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.nav-link {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.8rem 1.2rem !important;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 0 0.2rem;
+}
+
+.nav-link i {
+  font-size: 1.3rem;
+  margin-right: 0.5rem;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: white !important;
+}
+
+/* Mobile navbar toggle */
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Enhanced Cards */
+.card {
+  border-radius: 12px;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  font-weight: 600;
+}
+
+/* Enhanced Buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #0b5ed7 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0b5ed7 0%, var(--primary-color) 100%);
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success-color) 0%, #146c43 100%);
+  border: none;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #146c43 0%, var(--success-color) 100%);
+  transform: translateY(-2px);
+}
+
+.btn-info {
+  background: linear-gradient(135deg, var(--info-color) 0%, #0aa2c0 100%);
+  border: none;
+}
+
+.btn-info:hover {
+  background: linear-gradient(135deg, #0aa2c0 0%, var(--info-color) 100%);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Breadcrumb */
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  color: var(--secondary-color);
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.breadcrumb-item.active {
+  color: var(--secondary-color);
+}
+
+/* Enhanced Alerts */
+.alert {
+  border-radius: 8px;
+}
+
+/* Enhanced Footer */
+footer {
+  background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+}
+
+/* Custom Utilities */
+.hover-shadow:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-success {
+  background: linear-gradient(135deg, var(--success-color) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-info {
+  background: linear-gradient(135deg, var(--info-color) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced Typography */
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  font-weight: 700;
+}
+
+.lead {
+  font-weight: 400;
+}
+
+/* Enhanced Form Elements */
+.form-control {
+  border-radius: 8px;
+  padding: 12px 15px;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group {
+  border-radius: 8px;
+}
+
+/* Enhanced Accordion */
+.accordion-button {
+  font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #0b5ed7 100%);
+  color: white;
+}
+
+/* Enhanced Badges */
+.badge {
+  padding: 6px 12px;
+  font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .display-1 {
+    font-size: 3rem;
+  }
+  
+  .display-2 {
+    font-size: 2.5rem;
+  }
+  
+  .display-3 {
+    font-size: 2rem;
+  }
+  
+  .btn {
+    padding: 8px 16px;
+  }
+  
+  .nav-link {
+    font-size: 1rem;
+    padding: 0.6rem 1rem !important;
+  }
+  
+  .nav-link i {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animation Classes */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Floating Shapes */
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.shape-1 {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 120px;
+  height: 120px;
+  top: 60%;
+  left: 15%;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  width: 60px;
+  height: 60px;
+  top: 30%;
+  right: 10%;
+  animation-delay: 4s;
+}
+
+.shape-4 {
+  width: 100px;
+  height: 100px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 1s;
+}
+
+.shape-5 {
+  width: 70px;
+  height: 70px;
+  bottom: 40%;
+  right: 25%;
+  animation-delay: 3s;
+}
+
+/* Hover Lift Effect */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Formula Display */
+.formula-display {
+  font-family: 'Courier New', monospace;
+}

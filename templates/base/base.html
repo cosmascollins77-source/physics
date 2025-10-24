@@ -38,6 +38,30 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        
+        .nav-link {
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.2rem !important;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 0.2rem;
+        }
+        
+        .nav-link i {
+            font-size: 1.3rem;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
         .card {
             border-radius: 12px;
             border: none;
@@ -102,6 +126,29 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        
+        /* Enhanced navbar for better visibility */
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+        }
+        
+        /* Mobile navbar toggle */
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
     </style>
 </head>
 <body>
@@ -109,8 +156,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'topics:home' %}">
-                <i class="fas fa-atom fa-lg me-2"></i>
-                <span class="fw-bold">Physics Learning</span>
+                <i class="fas fa-atom fa-2x me-3"></i>
+                <span class="fw-bold fs-3">Physics Learning</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -118,18 +165,26 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'topics:home' %}">Home</a>
+                        <a class="nav-link" href="{% url 'topics:home' %}">
+                            <i class="fas fa-home"></i> Home
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'topics:topic_list' %}">Topics</a>
+                        <a class="nav-link" href="{% url 'topics:topic_list' %}">
+                            <i class="fas fa-book"></i> Topics
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'simulations:simulation_list' %}">Simulations</a>
+                        <a class="nav-link" href="{% url 'simulations:simulation_list' %}">
+                            <i class="fas fa-flask"></i> Simulations
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'quizzes:quiz_list' %}">Quizzes</a>
+                        <a class="nav-link" href="{% url 'quizzes:quiz_list' %}">
+                            <i class="fas fa-question-circle"></i> Quizzes
+                        </a>
                     </li>
                 </ul>
                 
