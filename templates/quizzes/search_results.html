@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Search Results{% if query %} for "{{ query }}"{% endif %} - Physics Quizzes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Search Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold">
+                {% if query %}
+                    Search Results for "{{ query }}"
+                {% else %}
+                    Search Quizzes
+                {% endif %}
+            </h1>
+            {% if query %}
+                <p class="lead text-muted">Found {{ quizzes|length }} quiz{{ quizzes|length|pluralize }}</p>
+            {% else %}
+                <p class="lead text-muted">Search for physics quizzes by topic or keywords</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" action="{% url 'quizzes:search_quizzes' %}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search quizzes..." value="{{ query|default:'' }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    {% if query %}
+        {% if quizzes %}
+        <div class="row g-4">
+            {% for quiz in quizzes %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary">{{ quiz.topic.grade.name }}</span>
+                            <span class="badge bg-warning">{{ quiz.difficulty_level|title }}</span>
+                        </div>
+                        
+                        <h5 class="card-title">{{ quiz.title }}</h5>
+                        <p class="card-text">{{ quiz.description|truncatewords:20 }}</p>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> 
+                                {% if quiz.time_limit %}{{ quiz.time_limit }} min{% else %}No time limit{% endif %}
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                <i class="fas fa-trophy"></i> Passing score: {{ quiz.passing_score }}%
+                            </small>
+                            <br>
+                            <small class="text-muted">
+                                <i class="fas fa-redo"></i> Max attempts: {{ quiz.max_attempts }}
+                            </small>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <a href="{% url 'quizzes:quiz_detail' quiz.id %}" class="btn btn-success">
+                                <i class="fas fa-play"></i> Start Quiz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h3>No Results Found</h3>
+                    <p class="text-muted">No quizzes found matching "{{ query }}"</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'quizzes:quiz_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> View All Quizzes
+                        </a>
+                        <button onclick="document.querySelector('input[name=q]').value=''; document.querySelector('form').submit();" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Clear Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h3>Search Physics Quizzes</h3>
+                <p class="text-muted">Enter keywords to find relevant physics quizzes</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

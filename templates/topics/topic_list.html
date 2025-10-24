@@ -1,0 +1,146 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if grade %}{{ grade.name }} Topics{% else %}All Physics Topics{% endif %} - Physics Learning Platform
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header with Enhanced Design -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-3 fw-bold text-gradient mb-3">
+                {% if grade %}
+                    {{ grade.name }} Physics Topics
+                {% else %}
+                    All Physics Topics
+                {% endif %}
+            </h1>
+            {% if grade %}
+                <p class="lead fs-4 text-muted">{{ grade.description }}</p>
+            {% else %}
+                <p class="lead fs-4 text-muted">Explore physics concepts organized by grade level</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Enhanced Search Bar -->
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-8">
+            <form method="get" action="{% url 'topics:search_topics' %}" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control form-control-lg" placeholder="Search topics..." value="{{ query|default:'' }}">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search me-2"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Topics Grid with Enhanced Cards -->
+    {% if topics %}
+    <div class="row g-4">
+        {% for topic in topics %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm topic-card border-top border-4 border-primary hover-lift">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary fs-6">{{ topic.grade.name }}</span>
+                        <span class="badge bg-secondary fs-6">{{ topic.difficulty_level|title }}</span>
+                    </div>
+                    
+                    <h3 class="card-title">{{ topic.title }}</h3>
+                    <p class="card-text fs-5">{{ topic.description|truncatewords:25 }}</p>
+                    
+                    <div class="mb-4">
+                        <small class="text-muted fs-6">
+                            <i class="fas fa-clock me-1"></i> {{ topic.estimated_duration }} min
+                        </small>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="{% url 'topics:topic_detail' topic.slug %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-book-open me-2"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-book fa-5x text-muted mb-4"></i>
+                <h2 class="mb-3">No Topics Found</h2>
+                <p class="lead text-muted fs-4">
+                    {% if grade %}
+                        No topics available for {{ grade.name }} yet.
+                    {% else %}
+                        No topics found matching your search.
+                    {% endif %}
+                </p>
+                <a href="{% url 'topics:topic_list' %}" class="btn btn-primary btn-lg px-4 py-2">
+                    <i class="fas fa-arrow-left me-2"></i> View All Topics
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Grade Navigation with Enhanced Cards -->
+    {% if not grade %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="display-5 fw-bold text-center mb-5">Browse by Grade Level</h2>
+            <div class="row g-4">
+                {% for grade_item in grades %}
+                <div class="col-lg-2 col-md-4 col-sm-6">
+                    <a href="{% url 'topics:topic_list_by_grade' grade_item.id %}" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm hover-shadow text-center p-3">
+                            <div class="grade-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <span class="fs-3 fw-bold">{{ grade_item.name }}</span>
+                            </div>
+                            <h4 class="card-title text-dark mb-2">{{ grade_item.name }}</h4>
+                            <p class="card-text text-muted small">{{ grade_item.description|truncatewords:8 }}</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Enhanced Styles -->
+<style>
+.topic-card {
+    transition: all 0.3s ease;
+}
+
+.topic-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--info-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+</style>
+{% endblock %}

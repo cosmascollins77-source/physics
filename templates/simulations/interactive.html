@@ -1,0 +1,181 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ simulation.title }} - Interactive Simulation{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'topics:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'simulations:simulation_list' %}">Simulations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ simulation.title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Simulation Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <span class="badge bg-primary">{{ simulation.topic.grade.name }}</span>
+                    <span class="badge bg-info">{{ simulation.simulation_type|title }}</span>
+                </div>
+                <small class="text-muted">
+                    <i class="fas fa-clock"></i> {{ simulation.estimated_duration }} min
+                </small>
+            </div>
+            
+            <h1 class="display-6 fw-bold mb-3">{{ simulation.title }}</h1>
+            <p class="lead">{{ simulation.description }}</p>
+        </div>
+    </div>
+
+    <!-- Learning Objectives -->
+    {% if simulation.learning_objectives %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-target"></i> Learning Objectives</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ simulation.learning_objectives }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Instructions -->
+    {% if simulation.instructions %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ simulation.instructions }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Interactive Simulation Container -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="simulation-container">
+                <h3 class="mb-3">
+                    <i class="fas fa-flask"></i> Interactive Simulation
+                </h3>
+                
+                <!-- Simulation Content -->
+                <div class="simulation-content">
+                    {% if simulation.html_content %}
+                        {{ simulation.html_content|safe }}
+                    {% else %}
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Simulation Coming Soon</h5>
+                            <p>This interactive simulation is currently under development. Check back soon for an engaging hands-on experience!</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Simulation Controls -->
+                <div class="simulation-controls mt-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary" onclick="resetSimulation()">
+                                <i class="fas fa-redo"></i> Reset Simulation
+                            </button>
+                            <button class="btn btn-success" onclick="runSimulation()">
+                                <i class="fas fa-play"></i> Run Simulation
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button class="btn btn-outline-secondary" onclick="showHelp()">
+                                <i class="fas fa-question-circle"></i> Help
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulation Parameters -->
+    {% if simulation.parameters %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4><i class="fas fa-sliders-h"></i> Simulation Parameters</h4>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        {% for param_name, param_value in simulation.parameters.items %}
+                        <div class="col-md-4 mb-3">
+                            <label for="param_{{ param_name }}" class="form-label">{{ param_name|title }}</label>
+                            <input type="range" class="form-range" id="param_{{ param_name }}" 
+                                   min="0" max="100" value="{{ param_value }}" 
+                                   onchange="updateParameter('{{ param_name }}', this.value)">
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">0</small>
+                                <small class="text-muted">{{ param_value }}</small>
+                                <small class="text-muted">100</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex gap-3">
+                <a href="{% url 'topics:topic_detail' simulation.topic.slug %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-book"></i> Learn More About {{ simulation.topic.title }}
+                </a>
+                <a href="{% url 'quizzes:quiz_list_by_topic' simulation.topic.id %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-question-circle"></i> Take Quiz
+                </a>
+                <a href="{% url 'simulations:simulation_list' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Back to Simulations
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function resetSimulation() {
+    // Reset simulation to initial state
+    console.log('Resetting simulation...');
+    // Add your reset logic here
+}
+
+function runSimulation() {
+    // Run the simulation
+    console.log('Running simulation...');
+    // Add your simulation logic here
+}
+
+function updateParameter(paramName, value) {
+    // Update simulation parameter
+    console.log('Updating parameter:', paramName, 'to', value);
+    // Add your parameter update logic here
+}
+
+function showHelp() {
+    // Show help modal or instructions
+    alert('Help: Use the controls above to adjust simulation parameters and observe the results.');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Home - Physics Learning Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Enhanced Design -->
+<div class="hero-section bg-gradient-primary text-white py-5 position-relative overflow-hidden">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="mb-4">
+                    <span class="badge bg-warning text-dark fs-6 px-3 py-2 rounded-pill">Group 5</span>
+                </div>
+                <h1 class="display-3 fw-bold mb-4">Master Physics with Interactive Learning</h1>
+                <p class="lead mb-4 fs-5">
+                    Explore physics concepts through interactive simulations, quizzes, and comprehensive 
+                    content aligned with the Competency-Based Curriculum (CBC).
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'topics:topic_list' %}" class="btn btn-light btn-lg px-4 py-3">
+                        <i class="fas fa-play me-2"></i> Start Learning
+                    </a>
+                    <a href="{% url 'simulations:simulation_list' %}" class="btn btn-outline-light btn-lg px-4 py-3">
+                        <i class="fas fa-flask me-2"></i> Try Simulations
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <i class="fas fa-atom fa-10x opacity-75 animate-float"></i>
+                    <div class="position-absolute top-0 start-0 translate-middle">
+                        <i class="fas fa-bolt fa-3x text-warning animate-pulse"></i>
+                    </div>
+                    <div class="position-absolute bottom-0 end-0 translate-middle-y">
+                        <i class="fas fa-magnet fa-3x text-info animate-pulse" style="animation-delay: 1s;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Animated background elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1;">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+</div>
+
+<!-- Features Section with Enhanced Cards -->
+<div class="container py-5">
+    <div class="row text-center mb-5">
+        <div class="col-12">
+            <h2 class="display-4 fw-bold mb-3">Why Choose Our Platform?</h2>
+            <p class="lead text-muted fs-5">Comprehensive physics education with modern learning tools</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-book fa-3x"></i>
+                    </div>
+                    <h3 class="card-title">CBC Aligned Content</h3>
+                    <p class="card-text fs-5">All topics are structured according to the Competency-Based Curriculum learning outcomes.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-flask fa-3x"></i>
+                    </div>
+                    <h3 class="card-title">Interactive Simulations</h3>
+                    <p class="card-text fs-5">Explore physics concepts through hands-on virtual experiments and simulations.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="fas fa-chart-line fa-3x"></i>
+                    </div>
+                    <h3 class="card-title">Progress Tracking</h3>
+                    <p class="card-text fs-5">Monitor your learning journey with detailed analytics and achievement tracking.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Topics with Enhanced Design -->
+{% if featured_topics %}
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-4 fw-bold">Featured Topics</h2>
+                <p class="lead text-muted fs-5">Start your physics journey with these essential topics</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for topic in featured_topics %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-shadow border-top border-4 border-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary fs-6">{{ topic.grade.name }}</span>
+                            <span class="badge bg-secondary fs-6">{{ topic.difficulty_level|title }}</span>
+                        </div>
+                        <h3 class="card-title">{{ topic.title }}</h3>
+                        <p class="card-text fs-5">{{ topic.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <small class="text-muted fs-6">
+                                <i class="fas fa-clock me-1"></i> {{ topic.estimated_duration }} min
+                            </small>
+                            <a href="{% url 'topics:topic_detail' topic.slug %}" class="btn btn-outline-primary btn-sm">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{% url 'topics:topic_list' %}" class="btn btn-primary btn-lg px-5 py-3 fs-5">
+                View All Topics
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Grade Selection with Enhanced Cards -->
+{% if grades %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="display-4 fw-bold">Choose Your Grade Level</h2>
+            <p class="lead text-muted fs-5">Select your grade to see relevant physics topics</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for grade in grades %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <a href="{% url 'topics:topic_list_by_grade' grade.id %}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-shadow text-center p-4">
+                    <div class="grade-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 100px; height: 100px;">
+                        <span class="fs-1 fw-bold">{{ grade.name }}</span>
+                    </div>
+                    <h3 class="card-title text-dark">{{ grade.name }}</h3>
+                    <p class="card-text text-muted">{{ grade.description|truncatewords:15 }}</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Enhanced Call to Action -->
+<div class="bg-gradient-primary text-white py-6 position-relative overflow-hidden">
+    <div class="container text-center position-relative" style="z-index: 2;">
+        <h2 class="display-3 fw-bold mb-4">Ready to Start Learning?</h2>
+        <p class="lead mb-5 fs-4">Explore physics concepts through interactive simulations and comprehensive content</p>
+        <div class="d-flex gap-4 justify-content-center flex-wrap">
+            <a href="{% url 'topics:topic_list' %}" class="btn btn-light btn-lg px-5 py-3 fs-5">
+                <i class="fas fa-book me-2"></i> Browse Topics
+            </a>
+            <a href="{% url 'simulations:simulation_list' %}" class="btn btn-outline-light btn-lg px-5 py-3 fs-5">
+                <i class="fas fa-flask me-2"></i> Try Simulations
+            </a>
+            <a href="{% url 'quizzes:quiz_list' %}" class="btn btn-outline-light btn-lg px-5 py-3 fs-5">
+                <i class="fas fa-question-circle me-2"></i> Take Quizzes
+            </a>
+        </div>
+    </div>
+    <!-- Animated background elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 1;">
+        <div class="floating-shape shape-4"></div>
+        <div class="floating-shape shape-5"></div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-1 {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 120px;
+    height: 120px;
+    top: 60%;
+    left: 15%;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    width: 60px;
+    height: 60px;
+    top: 30%;
+    right: 10%;
+    animation-delay: 4s;
+}
+
+.shape-4 {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 1s;
+}
+
+.shape-5 {
+    width: 70px;
+    height: 70px;
+    bottom: 40%;
+    right: 25%;
+    animation-delay: 3s;
+}
+
+.py-6 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+}
+</style>
+{% endblock %}

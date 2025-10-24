@@ -1,0 +1,189 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ quiz.title }} - Physics Quiz{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'topics:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quizzes:quiz_list' %}">Quizzes</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ quiz.title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Quiz Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <span class="badge bg-primary">{{ quiz.topic.grade.name }}</span>
+                    <span class="badge bg-warning">{{ quiz.difficulty_level|title }}</span>
+                </div>
+                <div class="text-end">
+                    {% if quiz.time_limit %}
+                    <small class="text-muted">
+                        <i class="fas fa-clock"></i> {{ quiz.time_limit }} min
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h1 class="display-6 fw-bold mb-3">{{ quiz.title }}</h1>
+            <p class="lead">{{ quiz.description }}</p>
+        </div>
+    </div>
+
+    <!-- Quiz Instructions -->
+    {% if quiz.instructions %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Instructions</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0">{{ quiz.instructions }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quiz Information -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-question-circle fa-2x text-primary mb-2"></i>
+                    <h5>{{ quiz.questions.count }} Questions</h5>
+                    <small class="text-muted">Total questions in this quiz</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-trophy fa-2x text-warning mb-2"></i>
+                    <h5>{{ quiz.passing_score }}%</h5>
+                    <small class="text-muted">Passing score required</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-redo fa-2x text-info mb-2"></i>
+                    <h5>{{ quiz.max_attempts }} Attempts</h5>
+                    <small class="text-muted">Maximum attempts allowed</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Features -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class="fas fa-cogs"></i> Quiz Features</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> 
+                                    {% if quiz.is_randomized %}Randomized question order{% else %}Fixed question order{% endif %}
+                                </li>
+                                <li><i class="fas fa-check text-success"></i> 
+                                    {% if quiz.show_correct_answers %}Shows correct answers{% else %}No answer display{% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> 
+                                    {% if quiz.show_explanations %}Includes explanations{% else %}No explanations{% endif %}
+                                </li>
+                                <li><i class="fas fa-check text-success"></i> 
+                                    {% if quiz.time_limit %}Time limited{% else %}No time limit{% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Previous Attempts -->
+    {% if user_attempts %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5><i class="fas fa-history"></i> Previous Attempts</h5>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Attempt</th>
+                            <th>Date</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                            <th>Time Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in user_attempts %}
+                        <tr>
+                            <td>{{ attempt.attempt_number }}</td>
+                            <td>{{ attempt.started_at|date:"M d, Y H:i" }}</td>
+                            <td>
+                                {% if attempt.score %}
+                                    <span class="badge {% if attempt.is_passed %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ attempt.score|floatformat:1 }}%
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">In Progress</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if attempt.is_passed %}
+                                    <span class="badge bg-success">Passed</span>
+                                {% elif attempt.score %}
+                                    <span class="badge bg-danger">Failed</span>
+                                {% else %}
+                                    <span class="badge bg-warning">In Progress</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if attempt.time_taken %}
+                                    {{ attempt.time_taken }}s
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation Buttons -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <!-- Remove the start quiz button since it requires authentication -->
+                <a href="{% url 'topics:topic_detail' quiz.topic.slug %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-book"></i> Learn More About {{ quiz.topic.title }}
+                </a>
+                <a href="{% url 'quizzes:quiz_list' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Back to Quizzes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

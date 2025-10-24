@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if topic %}{{ topic.title }} Quizzes{% else %}Physics Quizzes{% endif %} - Physics Learning Platform
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Enhanced Page Header -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-2 fw-bold text-gradient mb-3">
+                {% if topic %}
+                    {{ topic.title }} Quizzes
+                {% else %}
+                    Physics Quizzes
+                {% endif %}
+            </h1>
+            {% if topic %}
+                <p class="lead fs-3 text-muted">Test your knowledge of {{ topic.title|lower }}</p>
+            {% else %}
+                <p class="lead fs-3 text-muted">Test your physics knowledge with interactive quizzes</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Enhanced Quizzes Grid -->
+    {% if quizzes %}
+    <div class="row g-4">
+        {% for quiz in quizzes %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm hover-lift border-top border-4 border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-primary fs-6">{{ quiz.topic.grade.name }}</span>
+                        <span class="badge bg-warning fs-6">{{ quiz.difficulty_level|title }}</span>
+                    </div>
+                    
+                    <h3 class="card-title">{{ quiz.title }}</h3>
+                    <p class="card-text fs-5">{{ quiz.description|truncatewords:20 }}</p>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="text-muted fs-6">
+                                <i class="fas fa-clock me-1"></i> 
+                                {% if quiz.time_limit %}{{ quiz.time_limit }} min{% else %}No time limit{% endif %}
+                            </small>
+                            <small class="text-muted fs-6">
+                                <i class="fas fa-trophy me-1"></i> {{ quiz.passing_score }}%
+                            </small>
+                        </div>
+                        <small class="text-muted fs-6">
+                            <i class="fas fa-redo me-1"></i> Max attempts: {{ quiz.max_attempts }}
+                        </small>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="{% url 'quizzes:quiz_detail' quiz.id %}" class="btn btn-success btn-lg">
+                            <i class="fas fa-play me-2"></i> Start Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-question-circle fa-5x text-muted mb-4"></i>
+                <h2 class="mb-3">No Quizzes Found</h2>
+                <p class="lead text-muted fs-4">
+                    {% if topic %}
+                        No quizzes available for {{ topic.title }} yet.
+                    {% else %}
+                        No quizzes available at the moment.
+                    {% endif %}
+                </p>
+                <a href="{% url 'quizzes:quiz_list' %}" class="btn btn-primary btn-lg px-4 py-2">
+                    <i class="fas fa-arrow-left me-2"></i> View All Quizzes
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Enhanced Styles -->
+<style>
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--success-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Search Results{% if query %} for "{{ query }}"{% endif %} - Physics Learning Platform{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Search Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-6 fw-bold">
+                {% if query %}
+                    Search Results for "{{ query }}"
+                {% else %}
+                    Search Topics
+                {% endif %}
+            </h1>
+            {% if query %}
+                <p class="lead text-muted">Found {{ topics|length }} topic{{ topics|length|pluralize }}</p>
+            {% else %}
+                <p class="lead text-muted">Search for physics topics, concepts, or keywords</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" action="{% url 'topics:search_topics' %}" class="d-flex">
+                <input type="text" name="q" class="form-control me-2" placeholder="Search topics..." value="{{ query|default:'' }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    {% if query %}
+        {% if topics %}
+        <div class="row g-4">
+            {% for topic in topics %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary">{{ topic.grade.name }}</span>
+                            <span class="badge bg-secondary">{{ topic.difficulty_level|title }}</span>
+                        </div>
+                        
+                        <h5 class="card-title">{{ topic.title }}</h5>
+                        <p class="card-text">{{ topic.description|truncatewords:20 }}</p>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> {{ topic.estimated_duration }} min
+                            </small>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <a href="{% url 'topics:topic_detail' topic.slug %}" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h3>No Results Found</h3>
+                    <p class="text-muted">No topics found matching "{{ query }}"</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'topics:topic_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list"></i> View All Topics
+                        </a>
+                        <button onclick="document.querySelector('input[name=q]').value=''; document.querySelector('form').submit();" class="btn btn-outline-secondary">
+                            <i class="fas fa-times"></i> Clear Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h3>Search Physics Topics</h3>
+                <p class="text-muted">Enter keywords to find relevant physics topics and concepts</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

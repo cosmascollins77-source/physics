@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Profile | Physics Learning Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mt-4">User Profile</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <!-- Remove the profile information since it requires authentication -->
+                <p class="text-muted">Profile information requires authentication.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Notifications</h5>
+            </div>
+            <div class="card-body">
+                <!-- Remove the notifications since it requires authentication -->
+                <p class="text-muted">Notifications require authentication.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,257 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ attempt.quiz.title }} - Taking Quiz{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Quiz Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h1 class="display-6 fw-bold">{{ attempt.quiz.title }}</h1>
+                    <p class="lead">{{ attempt.quiz.description }}</p>
+                </div>
+                <div class="text-end">
+                    <div class="quiz-info">
+                        <span class="badge bg-primary">{{ attempt.quiz.topic.grade.name }}</span>
+                        <span class="badge bg-warning">{{ attempt.quiz.difficulty_level|title }}</span>
+                        {% if attempt.quiz.time_limit %}
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> Time Limit: {{ attempt.quiz.time_limit }} min
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Progress -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Quiz Progress</h6>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ forloop.counter|floatformat:0|add:0|mul:100|div:questions.count }}%"
+                                     aria-valuenow="{{ forloop.counter }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="{{ questions.count }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">
+                                Question <span id="current-question">1</span> of {{ questions.count }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Questions -->
+    <form id="quiz-form" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-12">
+                {% for question in questions %}
+                <div class="quiz-question mb-4" id="question-{{ forloop.counter }}" 
+                     style="{% if not forloop.first %}display: none;{% endif %}">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                Question {{ forloop.counter }}
+                                <span class="badge bg-secondary ms-2">{{ question.points }} point{{ question.points|pluralize }}</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="question-text mb-4">
+                                <p class="fs-5">{{ question.question_text }}</p>
+                            </div>
+
+                            <!-- Multiple Choice Questions -->
+                            {% if question.question_type == 'multiple_choice' %}
+                            <div class="answer-options">
+                                {% for answer in question.answers.all %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" 
+                                           name="question_{{ question.id }}" 
+                                           id="answer_{{ answer.id }}" 
+                                           value="{{ answer.id }}">
+                                    <label class="form-check-label" for="answer_{{ answer.id }}">
+                                        {{ answer.answer_text }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- True/False Questions -->
+                            {% if question.question_type == 'true_false' %}
+                            <div class="answer-options">
+                                {% for answer in question.answers.all %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" 
+                                           name="question_{{ question.id }}" 
+                                           id="answer_{{ answer.id }}" 
+                                           value="{{ answer.id }}">
+                                    <label class="form-check-label" for="answer_{{ answer.id }}">
+                                        {{ answer.answer_text }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Fill in the Blank Questions -->
+                            {% if question.question_type == 'fill_blank' %}
+                            <div class="answer-options">
+                                <div class="mb-3">
+                                    <label for="text_response_{{ question.id }}" class="form-label">Your Answer:</label>
+                                    <input type="text" class="form-control" 
+                                           id="text_response_{{ question.id }}" 
+                                           name="text_response_{{ question.id }}" 
+                                           placeholder="Enter your answer here...">
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Short Answer Questions -->
+                            {% if question.question_type == 'short_answer' %}
+                            <div class="answer-options">
+                                <div class="mb-3">
+                                    <label for="text_response_{{ question.id }}" class="form-label">Your Answer:</label>
+                                    <textarea class="form-control" 
+                                              id="text_response_{{ question.id }}" 
+                                              name="text_response_{{ question.id }}" 
+                                              rows="3" 
+                                              placeholder="Enter your detailed answer here..."></textarea>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Calculation Questions -->
+                            {% if question.question_type == 'calculation' %}
+                            <div class="answer-options">
+                                <div class="mb-3">
+                                    <label for="text_response_{{ question.id }}" class="form-label">Your Calculation:</label>
+                                    <textarea class="form-control" 
+                                              id="text_response_{{ question.id }}" 
+                                              name="text_response_{{ question.id }}" 
+                                              rows="4" 
+                                              placeholder="Show your work and final answer..."></textarea>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Navigation Buttons -->
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-outline-secondary" 
+                                        onclick="previousQuestion()" 
+                                        {% if forloop.first %}disabled{% endif %}>
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                
+                                {% if forloop.last %}
+                                <button type="button" class="btn btn-success" onclick="completeQuiz()">
+                                    <i class="fas fa-check"></i> Complete Quiz
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn btn-primary" onclick="nextQuestion()">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+
+    <!-- Quiz Instructions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle"></i> Quiz Instructions</h6>
+                <ul class="mb-0">
+                    <li>Answer all questions before completing the quiz</li>
+                    <li>You can navigate between questions using the Previous/Next buttons</li>
+                    <li>Your progress is automatically saved</li>
+                    {% if attempt.quiz.time_limit %}
+                    <li>You have {{ attempt.quiz.time_limit }} minutes to complete this quiz</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentQuestion = 1;
+const totalQuestions = {{ questions.count }};
+
+function showQuestion(questionNumber) {
+    // Hide all questions
+    document.querySelectorAll('.quiz-question').forEach(q => {
+        q.style.display = 'none';
+    });
+    
+    // Show current question
+    document.getElementById(`question-${questionNumber}`).style.display = 'block';
+    
+    // Update progress
+    document.getElementById('current-question').textContent = questionNumber;
+    
+    // Update progress bar
+    const progress = (questionNumber / totalQuestions) * 100;
+    document.querySelector('.progress-bar').style.width = progress + '%';
+}
+
+function nextQuestion() {
+    if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+    }
+}
+
+function previousQuestion() {
+    if (currentQuestion > 1) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+    }
+}
+
+function completeQuiz() {
+    if (confirm('Are you sure you want to complete the quiz? You cannot change your answers after submission.')) {
+        // Submit the form
+        document.getElementById('quiz-form').action = "{% url 'quizzes:complete_quiz' attempt.id %}";
+        document.getElementById('quiz-form').submit();
+    }
+}
+
+// Auto-save functionality
+function autoSave() {
+    // Save current answers periodically
+    console.log('Auto-saving quiz progress...');
+}
+
+// Set up auto-save every 30 seconds
+setInterval(autoSave, 30000);
+
+// Initialize
+showQuestion(1);
+</script>
+{% endblock %}

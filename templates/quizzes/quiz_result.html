@@ -1,0 +1,207 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ attempt.quiz.title }} - Quiz Results{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'topics:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quizzes:quiz_list' %}">Quizzes</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'quizzes:quiz_detail' attempt.quiz.id %}">{{ attempt.quiz.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Results</li>
+        </ol>
+    </nav>
+
+    <!-- Quiz Results Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <div class="result-header">
+                {% if attempt.is_passed %}
+                <div class="alert alert-success">
+                    <i class="fas fa-trophy fa-3x mb-3"></i>
+                    <h2 class="display-6 fw-bold text-success">Congratulations!</h2>
+                    <h3>You Passed the Quiz!</h3>
+                    <p class="lead">You scored {{ attempt.score|floatformat:1 }}% on {{ attempt.quiz.title }}</p>
+                </div>
+                {% else %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle fa-3x mb-3"></i>
+                    <h2 class="display-6 fw-bold text-danger">Quiz Not Passed</h2>
+                    <h3>Keep Learning!</h3>
+                    <p class="lead">You scored {{ attempt.score|floatformat:1 }}% on {{ attempt.quiz.title }}</p>
+                    <p>You need {{ attempt.quiz.passing_score }}% to pass. Try again!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-percentage fa-2x text-primary mb-2"></i>
+                    <h4>{{ attempt.score|floatformat:1 }}%</h4>
+                    <small class="text-muted">Final Score</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-2x text-info mb-2"></i>
+                    <h4>
+                        {% if attempt.time_taken %}
+                            {{ attempt.time_taken|floatformat:0 }}s
+                        {% else %}
+                            -
+                        {% endif %}
+                    </h4>
+                    <small class="text-muted">Time Taken</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-redo fa-2x text-warning mb-2"></i>
+                    <h4>{{ attempt.attempt_number }}</h4>
+                    <small class="text-muted">Attempt Number</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-calendar fa-2x text-success mb-2"></i>
+                    <h4>{{ attempt.completed_at|date:"M d" }}</h4>
+                    <small class="text-muted">Completed</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Results -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4><i class="fas fa-list-check"></i> Question-by-Question Results</h4>
+            <div class="accordion" id="resultsAccordion">
+                {% for response in responses %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                                type="button" data-bs-toggle="collapse" 
+                                data-bs-target="#collapse{{ forloop.counter }}" 
+                                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" 
+                                aria-controls="collapse{{ forloop.counter }}">
+                            <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                                <div>
+                                    <i class="fas fa-{% if response.is_correct %}check-circle text-success{% else %}times-circle text-danger{% endif %} me-2"></i>
+                                    Question {{ forloop.counter }}
+                                </div>
+                                <div>
+                                    <span class="badge {% if response.is_correct %}bg-success{% else %}bg-danger{% endif %}">
+                                        {% if response.is_correct %}+{{ response.points_earned }}{% else %}0{% endif %} pts
+                                    </span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}" 
+                         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
+                         aria-labelledby="heading{{ forloop.counter }}" 
+                         data-bs-parent="#resultsAccordion">
+                        <div class="accordion-body">
+                            <div class="question-detail">
+                                <h6><strong>Question:</strong></h6>
+                                <p>{{ response.question.question_text }}</p>
+                                
+                                <h6><strong>Your Answer:</strong></h6>
+                                {% if response.selected_answers.exists %}
+                                    <ul class="list-unstyled">
+                                        {% for answer in response.selected_answers.all %}
+                                        <li>
+                                            <span class="badge {% if answer.is_correct %}bg-success{% else %}bg-danger{% endif %}">
+                                                {{ answer.answer_text }}
+                                            </span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% elif response.text_response %}
+                                    <div class="alert alert-info">
+                                        <strong>Text Response:</strong><br>
+                                        {{ response.text_response }}
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle"></i> No answer provided
+                                    </div>
+                                {% endif %}
+                                
+                                <h6><strong>Correct Answer:</strong></h6>
+                                <ul class="list-unstyled">
+                                    {% for answer in response.question.answers.all %}
+                                        {% if answer.is_correct %}
+                                        <li>
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> {{ answer.answer_text }}
+                                            </span>
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                
+                                {% if response.question.explanation %}
+                                <h6><strong>Explanation:</strong></h6>
+                                <div class="alert alert-light">
+                                    {{ response.question.explanation }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="d-flex gap-3 justify-content-center">
+                <!-- Remove the try again button since it requires authentication -->
+                <a href="{% url 'topics:topic_detail' attempt.quiz.topic.slug %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-book"></i> Learn More About {{ attempt.quiz.topic.title }}
+                </a>
+                
+                <a href="{% url 'quizzes:quiz_list' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-list"></i> Browse More Quizzes
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Form -->
+    {% if not attempt.is_passed %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-comment"></i> Help Us Improve</h5>
+                </div>
+                <div class="card-body">
+                    <p>We'd love to hear your feedback to help us improve this quiz.</p>
+                    <!-- Remove the feedback form since it requires authentication -->
+                    <p class="text-muted">Feedback submission requires authentication.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
